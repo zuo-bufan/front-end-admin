@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<head>
+    <style>
+        /* 导航条容器 */
+        .navbar {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0 2rem;
+        }
+
+        /* 网格布局容器 */
+        .nav-container {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 60px;
+        }
+
+        /* 品牌标识 */
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* 导航菜单 */
+        .nav-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, auto));
+            justify-content: end;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 导航项 */
+        .nav-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #444;
+            text-decoration: none;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            color: #007bff;
+        }
+
+        /* 汉堡菜单按钮 */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            justify-self: end;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background: #333;
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+
+        /* 移动端响应式 */
+        @media (max-width: 768px) {
+            .nav-container {
+                grid-template-columns: 1fr auto;
+            }
+
+            .nav-menu {
+                display: none;
+                grid-column: 1 / -1;
+                grid-template-columns: 1fr;
+                background: #fff;
+                padding: 1rem;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-menu.active {
+                display: grid;
+            }
+
+            .nav-item {
+                padding: 0.8rem 0;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -8px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">LOGO</a>
+
+            <button class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#" class="nav-link">首页</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">产品</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">服务</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">关于</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">联系</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <script>
+        // 汉堡菜单交互
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // 点击页面其他区域关闭菜单
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-container')) {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+
+        // 窗口调整时重置菜单
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+
+</html>

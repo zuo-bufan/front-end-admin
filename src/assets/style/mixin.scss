@@ -1,0 +1,50 @@
+$color:red;
+
+/**
+ * 公共样式	
+ */
+ .table-wrapped {
+		padding: 8px;
+		background-color: #f5f5f5;
+		height: calc(100vh - 101px);
+		font-size: 14px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+
+		.demo-tabs {
+			background-color: #fff;
+			padding: 8px;
+		}
+
+		.table-top {
+			.table-header {
+				padding: 0 24px 10px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				height: 48px;
+				background: #fff;
+				.left-wrapped{
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					.search-wrapped{
+						margin-right: 24px;
+						display: flex;
+					}
+				}
+			}
+
+			.table-content {
+				padding: 0px 24px 20px;
+				background-color: #fff;
+			}
+		}
+
+		.table-footer {
+			display: flex;
+			justify-content: flex-end;
+			margin-top: 20px;
+		}
+	}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .table-container {
+            margin: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 800px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="table-container">
+        <table id="dataTable">
+            <thead id="tableHeader"></thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // 复杂表头配置
+        const headers = [
+            {
+                label: '基本信息',
+                colspan: 2,
+                children: [
+                    { label: '姓名', key: 'name', rowspan: 2 },
+                    { label: '年龄', key: 'age', rowspan: 2 },
+                ]
+            },
+            {
+                label: '成绩信息',
+                colspan: 5,
+                children: [
+                    { label: '数学', key: 'math', rowspan: 2 },
+                    {
+                        label: '理科',
+                        colspan: 2,
+                        children: [
+                            { label: '物理', key: 'physics' },
+                            { label: '化学', key: 'chemistry' }
+                        ]
+                    }
+                ]
+            },
+            {
+                label: '成绩信息',
+                colspan: 3,
+                children: [
+                    { label: '数学', key: 'math', rowspan: 2 },
+                    {
+                        label: '理科',
+                        colspan: 2,
+                        children: [
+                            { label: '物理', key: 'physics' },
+                            { label: '化学', key: 'chemistry' }
+                        ]
+                    },
+                    {
+                        label: '理科',
+                        colspan: 2,
+                        children: [
+                            { label: '物理', key: 'physics' },
+                            { label: '化学', key: 'chemistry' }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // 模拟数据
+        const tableData = [
+            { name: '张三', age: 20, math: 90, physics: 85, chemistry: 88 },
+            { name: '李四', age: 22, math: 85, physics: 90, chemistry: 92 },
+            { name: '王五', age: 21, math: 95, physics: 88, chemistry: 90 }
+        ];
+
+        // 生成复杂表头
+        function createComplexHeader(headers) {
+            const thead = document.getElementById('tableHeader');
+            const maxDepth = getHeaderDepth(headers);
+
+            // 创建表头行
+            const rows = [];
+            for (let i = 0; i < maxDepth; i++) {
+                rows.push(document.createElement('tr'));
+            }
+
+            // 递归添加表头单元格
+            function processHeaders(headers, currentDepth, rowIndex) {
+                headers.forEach(header => {
+                    const th = document.createElement('th');
+                    th.textContent = header.label;
+
+                    if (header.colspan) {
+                        th.colSpan = header.colspan;
+                    }
+                    if (header.rowspan && header.rowspan > 1) {
+                        th.rowSpan = header.rowspan;
+                    }
+
+                    rows[rowIndex].appendChild(th);
+
+                    if (header.children) {
+                        processHeaders(header.children, currentDepth + 1, rowIndex + 1);
+                    } else {
+                        // 填充下方空白单元格
+                        for (let i = rowIndex + 1; i < maxDepth; i++) {
+                            const emptyTh = document.createElement('th');
+                            emptyTh.style.display = 'none';
+                            rows[i].appendChild(emptyTh);
+                        }
+                    }
+                });
+            }
+
+            processHeaders(headers, 0, 0);
+            rows.forEach(row => thead.appendChild(row));
+        }
+
+        // 获取表头最大深度
+        function getHeaderDepth(headers) {
+            let maxDepth = 1;
+            headers.forEach(header => {
+                if (header.children) {
+                    const childDepth = getHeaderDepth(header.children) + 1;
+                    maxDepth = Math.max(maxDepth, childDepth);
+                }
+            });
+            return maxDepth;
+        }
+
+        // 生成表格内容
+        function createTableBody(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                flattenHeaders(headers).forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = item[header.key];
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 扁平化表头结构
+        function flattenHeaders(headers) {
+            const result = [];
+            function process(headers) {
+                headers.forEach(header => {
+                    if (header.children) {
+                        process(header.children);
+                    } else {
+                        result.push(header);
+                    }
+                });
+            }
+            process(headers);
+            return result;
+        }
+
+        // 初始化表格
+        function initTable() {
+            createComplexHeader(headers);
+            createTableBody(tableData);
+        }
+
+        // 页面加载时初始化
+        window.onload = initTable;
+    </script>
+</body>
+
+</html>
